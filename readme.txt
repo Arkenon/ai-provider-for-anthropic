@@ -21,12 +21,7 @@ This plugin provides Anthropic integration for the PHP AI Client SDK. It enables
 * Extended thinking support
 * Automatic provider registration
 
-**Supported Models:**
-
-Models are dynamically discovered from the API. Current flagship models include:
-
-* claude-opus-4-5, claude-sonnet-4-5, claude-haiku-4-5 (latest)
-* claude-opus-4-1, claude-sonnet-4, claude-opus-4
+Available models are dynamically discovered from the Anthropic API, including Claude models for text generation with multimodal input support.
 
 **Requirements:**
 
