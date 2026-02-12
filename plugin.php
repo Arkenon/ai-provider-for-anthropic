@@ -27,6 +27,8 @@ if (!defined('ABSPATH')) {
     return;
 }
 
+require_once __DIR__ . '/src/autoload.php';
+
 /**
  * Registers the Anthropic AI provider with the AI Client.
  *
