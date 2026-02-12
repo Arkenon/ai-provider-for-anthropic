@@ -61,17 +61,7 @@ echo $result->toText();
 
 ## Supported Models
 
-This provider dynamically discovers available models from the Anthropic API. Current flagship models include:
-
-**Claude 4.5 Series (Latest)**
-- `claude-opus-4-5` - Most intelligent model, state-of-the-art coding
-- `claude-sonnet-4-5` - Best balance of intelligence, speed, and cost
-- `claude-haiku-4-5` - Fast and efficient
-
-**Claude 4 Series**
-- `claude-opus-4-1` - Previous flagship model
-- `claude-sonnet-4` - Balanced performance
-- `claude-opus-4` - High capability
+Available models are dynamically discovered from the Anthropic API. This includes Claude models for text generation with multimodal input support. See the [Anthropic documentation](https://docs.anthropic.com/en/docs/about-claude/models) for the full list of available models.
 
 ## Configuration
 
