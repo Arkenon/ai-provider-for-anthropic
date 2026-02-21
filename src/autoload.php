@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PSR-4 autoloader for the Anthropic AI Provider package.
+ * PSR-4 autoloader for the AI Provider for Anthropic package.
  *
  * @since 1.0.0
  *

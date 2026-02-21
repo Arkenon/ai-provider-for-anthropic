@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Plugin Name: Anthropic AI Provider
- * Plugin URI: https://github.com/WordPress/anthropic-ai-provider
- * Description: Anthropic AI provider for the WordPress AI Client.
+ * Plugin Name: AI Provider for Anthropic
+ * Plugin URI: https://github.com/WordPress/ai-provider-for-anthropic
+ * Description: AI Provider for Anthropic for the WordPress AI Client.
  * Requires at least: 6.9
  * Requires PHP: 7.4
  * Version: 1.0.0
@@ -11,7 +11,7 @@
  * Author URI: https://make.wordpress.org/ai/
  * License: GPL-2.0-or-later
  * License URI: https://spdx.org/licenses/GPL-2.0-or-later.html
- * Text Domain: anthropic-ai-provider
+ * Text Domain: ai-provider-for-anthropic
  *
  * @package WordPress\AnthropicAiProvider
  */
@@ -30,7 +30,7 @@ if (!defined('ABSPATH')) {
 require_once __DIR__ . '/src/autoload.php';
 
 /**
- * Registers the Anthropic AI provider with the AI Client.
+ * Registers the AI Provider for Anthropic with the AI Client.
  *
  * @since 1.0.0
  *

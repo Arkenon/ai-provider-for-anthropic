@@ -1,4 +1,4 @@
-# Anthropic AI Provider
+# AI Provider for Anthropic
 
 An Anthropic (Claude) provider for the [PHP AI Client](https://github.com/WordPress/php-ai-client) SDK. Works as both a Composer package and a WordPress plugin.
 
@@ -12,13 +12,13 @@ An Anthropic (Claude) provider for the [PHP AI Client](https://github.com/WordPr
 ### As a Composer Package
 
 ```bash
-composer require wordpress/anthropic-ai-provider
+composer require wordpress/ai-provider-for-anthropic
 ```
 
 ### As a WordPress Plugin
 
 1. Download the plugin files
-2. Upload to `/wp-content/plugins/anthropic-ai-provider/`
+2. Upload to `/wp-content/plugins/ai-provider-for-anthropic/`
 3. Ensure the PHP AI Client plugin is installed and activated
 4. Activate the plugin through the WordPress admin
 

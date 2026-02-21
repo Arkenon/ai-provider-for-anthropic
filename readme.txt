@@ -1,4 +1,4 @@
-=== Anthropic AI Provider ===
+=== AI Provider for Anthropic ===
 Contributors: wordpressdotorg
 Tags: ai, anthropic, claude, artificial-intelligence
 Requires at least: 6.9
@@ -32,7 +32,7 @@ Available models are dynamically discovered from the Anthropic API, including Cl
 == Installation ==
 
 1. Ensure the PHP AI Client plugin is installed and activated
-2. Upload the plugin files to `/wp-content/plugins/anthropic-ai-provider/`
+2. Upload the plugin files to `/wp-content/plugins/ai-provider-for-anthropic/`
 3. Activate the plugin through the 'Plugins' menu in WordPress
 4. Configure your Anthropic API key via the `ANTHROPIC_API_KEY` environment variable or constant
 
