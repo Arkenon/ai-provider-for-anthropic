@@ -2,7 +2,6 @@
     "name": "wordpress/anthropic-ai-provider",
     "description": "Anthropic AI provider for the PHP AI Client SDK. Works as both a Composer package and WordPress plugin.",
     "license": "GPL-2.0-or-later",
-    "type": "wordpress-plugin",
     "keywords": [
         "ai",
         "anthropic",
