@@ -3,7 +3,7 @@ Contributors: wordpressdotorg
 Tags: ai, anthropic, claude, artificial-intelligence
 Requires at least: 6.9
 Tested up to: 7.0
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -48,13 +48,13 @@ No, this plugin requires the PHP AI Client plugin to be installed and activated.
 
 == Changelog ==
 
-= 1.0.0 =
-* Initial release
+= 1.0.1 =
+
+* Initial release of the plugin
 * Support for Claude text generation models
 * Function calling support
 * Extended thinking support
 
-== Upgrade Notice ==
-
 = 1.0.0 =
-Initial release.
+
+* Initial release of the Composer package
