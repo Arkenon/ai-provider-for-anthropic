@@ -2,7 +2,7 @@
 Contributors: wordpressdotorg
 Tags: ai, anthropic, claude, artificial-intelligence
 Requires at least: 6.9
-Tested up to: 6.9
+Tested up to: 7.0
 Stable tag: 1.0.0
 Requires PHP: 7.4
 License: GPL-2.0-or-later
@@ -26,15 +26,15 @@ Available models are dynamically discovered from the Anthropic API, including Cl
 **Requirements:**
 
 * PHP 7.4 or higher
-* PHP AI Client plugin must be installed and activated
+* For WordPress 6.9, the [wordpress/php-ai-client](https://github.com/WordPress/php-ai-client) package must be installed
+* For WordPress 7.0 and above, no additional changes are required
 * Anthropic API key
 
 == Installation ==
 
-1. Ensure the PHP AI Client plugin is installed and activated
-2. Upload the plugin files to `/wp-content/plugins/ai-provider-for-anthropic/`
-3. Activate the plugin through the 'Plugins' menu in WordPress
-4. Configure your Anthropic API key via the `ANTHROPIC_API_KEY` environment variable or constant
+1. Upload the plugin files to `/wp-content/plugins/ai-provider-for-anthropic/`
+2. Activate the plugin through the 'Plugins' menu in WordPress
+3. Configure your Anthropic API key via the `ANTHROPIC_API_KEY` environment variable or constant
 
 == Frequently Asked Questions ==
 
