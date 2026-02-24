@@ -1,6 +1,6 @@
 === AI Provider for Anthropic ===
 Contributors: wordpressdotorg
-Tags: ai, anthropic, claude, artificial-intelligence
+Tags: ai, anthropic, claude, artificial-intelligence, connector
 Requires at least: 6.9
 Tested up to: 7.0
 Stable tag: 1.0.1
