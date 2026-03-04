@@ -3,7 +3,7 @@ Contributors: wordpressdotorg
 Tags: ai, anthropic, claude, artificial-intelligence, connector
 Requires at least: 6.9
 Tested up to: 7.0
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -47,6 +47,12 @@ Visit the [Anthropic Console](https://console.anthropic.com/) to create an accou
 No, this plugin requires the PHP AI Client plugin to be installed and activated. It provides the Anthropic-specific implementation that the PHP AI Client uses.
 
 == Changelog ==
+
+= 1.0.2 =
+
+* Add plugin directory assets by @shaunandrews in https://github.com/WordPress/ai-provider-for-anthropic/pull/10
+* Add 'connector' tag to readme.txt by @jeffpaul in https://github.com/WordPress/ai-provider-for-anthropic/pull/12
+* Add provider description by @felixarntz in https://github.com/WordPress/ai-provider-for-anthropic/pull/13
 
 = 1.0.1 =
 
