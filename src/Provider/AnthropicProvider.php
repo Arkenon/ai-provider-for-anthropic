@@ -79,6 +79,10 @@ class AnthropicProvider extends AbstractApiProvider
                 $providerMetadataArgs[] = 'Text generation with Claude.';
             }
         }
+        // Provider logoPath support was added in 1.3.0.
+        if (version_compare(AiClient::VERSION, '1.3.0', '>=')) {
+            $providerMetadataArgs[] = dirname(__DIR__, 2) . '/assets/images/anthropic.svg';
+        }
         return new ProviderMetadata(...$providerMetadataArgs);
     }
 
