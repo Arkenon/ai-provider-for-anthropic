@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace WordPress\AnthropicAiProvider\Models;
 
+use WordPress\AiClient\AiClient;
 use WordPress\AiClient\Common\Exception\InvalidArgumentException;
 use WordPress\AiClient\Common\Exception\RuntimeException;
 use WordPress\AiClient\Messages\DTO\Message;
@@ -202,16 +203,45 @@ class AnthropicTextGenerationModel extends AbstractApiBasedModel implements Text
     {
         return array_map(
             function (Message $message): array {
+                $content = array_values(array_filter(array_map(
+                    [$this, 'getMessagePartData'],
+                    $message->getParts()
+                )));
+
                 return [
                     'role' => $this->getMessageRoleString($message->getRole()),
-                    'content' => array_values(array_filter(array_map(
-                        [$this, 'getMessagePartData'],
-                        $message->getParts()
-                    ))),
+                    'content' => $this->removeUnsignedThinkingBlocks($content),
                 ];
             },
             $messages
         );
+    }
+
+    /**
+     * Removes thinking blocks that carry no signature from a message's content.
+     *
+     * The API rejects any `thinking` block that is sent without its signature, so a block
+     * whose signature was lost (for example in conversation history that was persisted
+     * before the signature was preserved) would fail the whole request. Since thinking
+     * blocks only have to be echoed back for the assistant turn they belong to, dropping
+     * such a block is preferable to sending one that is guaranteed to be rejected. The
+     * block is kept if it is the only content left, so that a message never ends up empty.
+     *
+     * @since n.e.x.t
+     *
+     * @param list<array<string, mixed>> $content The prepared content blocks.
+     * @return list<array<string, mixed>> The content blocks to send.
+     */
+    protected function removeUnsignedThinkingBlocks(array $content): array
+    {
+        $filtered = array_values(array_filter(
+            $content,
+            static function (array $block): bool {
+                return ($block['type'] ?? null) !== 'thinking' || isset($block['signature']);
+            }
+        ));
+
+        return $filtered !== [] ? $filtered : $content;
     }
 
     /**
@@ -244,10 +274,15 @@ class AnthropicTextGenerationModel extends AbstractApiBasedModel implements Text
         $type = $part->getType();
         if ($type->isText()) {
             if ($part->getChannel()->isThought()) {
-                return [
+                $thinkingData = [
                     'type' => 'thinking',
                     'thinking' => $part->getText(),
                 ];
+                $signature = $this->getMessagePartThoughtSignature($part);
+                if ($signature !== null) {
+                    $thinkingData['signature'] = $signature;
+                }
+                return $thinkingData;
             }
             return [
                 'type' => 'text',
@@ -357,6 +392,40 @@ class AnthropicTextGenerationModel extends AbstractApiBasedModel implements Text
                 $type
             )
         );
+    }
+
+    /**
+     * Returns the thought signature stored on a message part, if any.
+     *
+     * @since n.e.x.t
+     *
+     * @param MessagePart $part The message part to get the thought signature for.
+     * @return string|null The thought signature, or null if there is none.
+     */
+    protected function getMessagePartThoughtSignature(MessagePart $part): ?string
+    {
+        if (!self::supportsThoughtSignatures()) {
+            return null;
+        }
+
+        $thoughtSignature = $part->getThoughtSignature();
+
+        return $thoughtSignature !== null && $thoughtSignature !== '' ? $thoughtSignature : null;
+    }
+
+    /**
+     * Checks whether the installed AI Client version can carry thought signatures.
+     *
+     * `MessagePart` gained support for thought signatures in AI Client 1.3.0. With an older
+     * version there is nowhere to store the signature, so it is simply not round-tripped.
+     *
+     * @since n.e.x.t
+     *
+     * @return bool True if message parts can carry a thought signature, false otherwise.
+     */
+    protected static function supportsThoughtSignatures(): bool
+    {
+        return version_compare(AiClient::VERSION, '1.3.0', '>=');
     }
 
     /**
@@ -546,6 +615,22 @@ class AnthropicTextGenerationModel extends AbstractApiBasedModel implements Text
             case 'thinking':
                 if (!isset($partData['thinking']) || !is_string($partData['thinking'])) {
                     throw new InvalidArgumentException('Part has an invalid thinking shape.');
+                }
+                /*
+                 * The API requires every thinking block to be echoed back unchanged on all
+                 * following turns of the same conversation, including its opaque signature.
+                 * Without it, the next request fails with
+                 * "messages.N.content.0.thinking.signature: Field required".
+                 */
+                $signature = isset($partData['signature']) && is_string($partData['signature'])
+                    ? $partData['signature']
+                    : null;
+                if ($signature !== null && $signature !== '' && self::supportsThoughtSignatures()) {
+                    return new MessagePart(
+                        $partData['thinking'],
+                        MessagePartChannelEnum::thought(),
+                        $signature
+                    );
                 }
                 return new MessagePart($partData['thinking'], MessagePartChannelEnum::thought());
             case 'tool_use':
