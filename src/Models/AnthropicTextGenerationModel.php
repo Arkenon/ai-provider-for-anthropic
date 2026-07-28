@@ -106,7 +106,6 @@ class AnthropicTextGenerationModel extends AbstractApiBasedModel implements Text
             'cache_read_input_tokens' => 0,
         ];
         $lastResponseData = null;
-        $continued = false;
 
         /** @var list<array<string, mixed>> $messagesParam */
         $messagesParam = isset($params['messages']) && is_array($params['messages'])
@@ -165,39 +164,37 @@ class AnthropicTextGenerationModel extends AbstractApiBasedModel implements Text
                 'role' => $role,
                 'content' => $content,
             ];
-            $continued = true;
         }
 
         if (!$lastResponseData) {
             throw new RuntimeException('No response received from API.');
         }
 
-        $lastResponseData['content'] = $continued
-            ? $this->mergeContinuedTextBlocks($accumulatedContent)
-            : $accumulatedContent;
+        $lastResponseData['content'] = $this->mergeTextBlocks($accumulatedContent);
         $lastResponseData['usage'] = $accumulatedUsage;
 
         return $this->parseResponseDataToGenerativeAiResult($lastResponseData);
     }
 
     /**
-     * Merges the text blocks of a turn that was continued after one or more pauses.
+     * Merges the text slices of an assistant turn into a single text block.
      *
-     * Every leg of a paused turn returns its own slice of the answer as a separate text block,
-     * and those slices are not adjacent because each leg also returns its own server tool
-     * blocks. Consumers read the answer from the first content text part of the message -
-     * GenerativeAiResult::toText() returns that part and stops - so leaving the slices apart
-     * would surface only the fragment produced before the first pause and silently discard the
-     * rest of an answer that was fully generated and paid for. The slices belong to a single
-     * assistant turn, so they are joined into the first text block. Turns that never paused are
-     * left untouched.
+     * A turn that uses a server-side tool (such as web search) carries its answer as several
+     * text blocks: the model emits a slice of text, then a `server_tool_use` /
+     * `web_search_tool_result` pair, then the next slice, and so on — within a single response
+     * as well as across the legs of a turn that paused with `pause_turn`. Consumers read the
+     * answer from the first content text part of the message — GenerativeAiResult::toText()
+     * returns that part and stops — so leaving the slices apart would surface only the first
+     * fragment and silently discard the rest of an answer that was fully generated and paid
+     * for. The slices belong to a single assistant turn, so they are joined into the first
+     * text block; non-text blocks and turns with a single text block pass through unchanged.
      *
      * @since n.e.x.t
      *
      * @param list<array<string, mixed>> $content The accumulated content blocks.
      * @return list<array<string, mixed>> The content blocks with the text slices joined.
      */
-    protected function mergeContinuedTextBlocks(array $content): array
+    protected function mergeTextBlocks(array $content): array
     {
         $merged = [];
         $textIndex = null;
