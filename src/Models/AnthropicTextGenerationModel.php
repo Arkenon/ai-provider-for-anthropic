@@ -405,28 +405,9 @@ class AnthropicTextGenerationModel extends AbstractApiBasedModel implements Text
      */
     protected function getMessagePartThoughtSignature(MessagePart $part): ?string
     {
-        if (!self::supportsThoughtSignatures()) {
-            return null;
-        }
-
         $thoughtSignature = $part->getThoughtSignature();
 
         return $thoughtSignature !== null && $thoughtSignature !== '' ? $thoughtSignature : null;
-    }
-
-    /**
-     * Checks whether the installed AI Client version can carry thought signatures.
-     *
-     * `MessagePart` gained support for thought signatures in AI Client 1.3.0. With an older
-     * version there is nowhere to store the signature, so it is simply not round-tripped.
-     *
-     * @since n.e.x.t
-     *
-     * @return bool True if message parts can carry a thought signature, false otherwise.
-     */
-    protected static function supportsThoughtSignatures(): bool
-    {
-        return version_compare(AiClient::VERSION, '1.3.0', '>=');
     }
 
     /**
@@ -626,7 +607,7 @@ class AnthropicTextGenerationModel extends AbstractApiBasedModel implements Text
                 $signature = isset($partData['signature']) && is_string($partData['signature'])
                     ? $partData['signature']
                     : null;
-                if ($signature !== null && $signature !== '' && self::supportsThoughtSignatures()) {
+                if ($signature !== null && $signature !== '') {
                     return new MessagePart(
                         $partData['thinking'],
                         MessagePartChannelEnum::thought(),
