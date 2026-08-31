@@ -45,12 +45,15 @@ use WordPress\AnthropicAiProvider\Provider\AnthropicProvider;
  *     id?: string,
  *     role?: string,
  *     content?: list<array<string, mixed>>,
+ *     container?: array{id?: string},
  *     stop_reason?: string,
  *     usage?: UsageData
  * }
  */
 class AnthropicTextGenerationModel extends AbstractApiBasedModel implements TextGenerationModelInterface
 {
+    public const MAX_TOOL_CONTINUATIONS = 5;
+
     /**
      * Default maximum number of tokens for text generation.
      *
@@ -109,7 +112,6 @@ class AnthropicTextGenerationModel extends AbstractApiBasedModel implements Text
          * The content and token usage of every leg are accumulated so the caller receives one
          * complete result. The number of continuations is bounded to avoid an endless loop.
          */
-        $maxContinuations = 5;
         $accumulatedContent = [];
         $accumulatedUsage = [
             'input_tokens' => 0,
@@ -124,7 +126,7 @@ class AnthropicTextGenerationModel extends AbstractApiBasedModel implements Text
             ? $params['messages']
             : [];
 
-        for ($i = 0; $i <= $maxContinuations; $i++) {
+        for ($i = 0; $i <= self::MAX_TOOL_CONTINUATIONS; $i++) {
             $params['messages'] = $messagesParam;
 
             $request = new Request(
@@ -161,10 +163,19 @@ class AnthropicTextGenerationModel extends AbstractApiBasedModel implements Text
             }
 
             $stopReason = $responseData['stop_reason'] ?? null;
-            if ('pause_turn' !== $stopReason || $i >= $maxContinuations) {
+            if ('pause_turn' !== $stopReason || $i >= self::MAX_TOOL_CONTINUATIONS) {
                 break;
             }
 
+// Preserve state for server tools backed by a container, such as code execution.
+$container = $responseData['container'] ?? null;
+if (
+    is_array($container) &&
+    isset($container['id']) &&
+    is_string($container['id'])
+) {
+    $params['container'] = $container['id'];
+}
             // Append assistant response to messages parameter for continuation.
             $role = isset($responseData['role']) && is_string($responseData['role'])
                 ? $responseData['role']
