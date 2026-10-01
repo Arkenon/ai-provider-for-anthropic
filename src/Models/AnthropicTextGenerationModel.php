@@ -225,7 +225,7 @@ class AnthropicTextGenerationModel extends AbstractApiBasedModel implements Text
      * for. The slices belong to a single assistant turn, so they are joined into the first
      * text block; non-text blocks and turns with a single text block pass through unchanged.
      *
-     * @since n.e.x.t
+     * @since 1.0.5
      *
      * @param list<array<string, mixed>> $content The accumulated content blocks.
      * @return list<array<string, mixed>> The content blocks with the text slices joined.
@@ -379,7 +379,7 @@ class AnthropicTextGenerationModel extends AbstractApiBasedModel implements Text
      * such a block is preferable to sending one that is guaranteed to be rejected. The
      * block is kept if it is the only content left, so that a message never ends up empty.
      *
-     * @since n.e.x.t
+     * @since 1.0.5
      *
      * @param list<array<string, mixed>> $content The prepared content blocks.
      * @return list<array<string, mixed>> The content blocks to send.
@@ -550,7 +550,7 @@ class AnthropicTextGenerationModel extends AbstractApiBasedModel implements Text
     /**
      * Returns the thought signature stored on a message part, if any.
      *
-     * @since n.e.x.t
+     * @since 1.0.5
      *
      * @param MessagePart $part The message part to get the thought signature for.
      * @return string|null The thought signature, or null if there is none.
@@ -628,7 +628,7 @@ class AnthropicTextGenerationModel extends AbstractApiBasedModel implements Text
     /**
      * Parses the response data from the API endpoint to a generative AI result.
      *
-     * @since n.e.x.t
+     * @since 1.0.5
      *
      * @param ResponseData $responseData The response data from the API endpoint.
      * @return GenerativeAiResult The parsed generative AI result.
